@@ -39,6 +39,8 @@ resource "aws_instance" "docker_ec2" {
   associate_public_ip_address = true
   iam_instance_profile        = "ec2-ssm-role"
 
+  user_data_replace_on_change = true
+
   user_data = <<-EOF
               #!/bin/bash
               yum update -y
