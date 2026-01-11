@@ -27,6 +27,10 @@ resource "aws_instance" "docker_ec2" {
   ami           = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
 
+  subnet_id                   = data.aws_subnet.public_subnet.id
+  associate_public_ip_address = true
+  iam_instance_profile        = "ec2-ssm-role"
+
   user_data = <<-EOF
               #!/bin/bash
               yum update -y
@@ -38,5 +42,14 @@ resource "aws_instance" "docker_ec2" {
 
   tags = {
     Name = "docker-runtime-ec2"
+  }
+}
+
+
+#public ip
+data "aws_subnet" "public_subnet" {
+  filter {
+    name   = "map-public-ip-on-launch"
+    values = ["true"]
   }
 }
