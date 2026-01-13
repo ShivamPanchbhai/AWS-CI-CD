@@ -1,4 +1,5 @@
 terraform {
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -11,15 +12,16 @@ terraform {
     key    = "ec2/terraform.tfstate"
     region = "ap-south-1"
   }
-}
+
+} # terraform block ends
 
 provider "aws" {
   region = "ap-south-1"
-}
+} # provider block ends
 
 # Get latest Amazon Linux 2023 AMI
-data "aws_ami" "amazon_linux" {
-  most_recent = true
+data "aws_ami" "amazon_linux" { # lookup query
+  most_recent = true            # picks the newest one
   owners      = ["amazon"]
 
   filter {
