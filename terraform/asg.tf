@@ -1,9 +1,9 @@
 resource "aws_autoscaling_group" "docker_asg" {
-  name = "docker-runtime-asg"
+  name = "EC2-ASG"
 
-  min_size         = 1
-  max_size         = 1
-  desired_capacity = 1
+  min_size         = 2
+  max_size         = 2
+  desired_capacity = 2
 
   vpc_zone_identifier = [
     "subnet-076bfaf1ee40ec8fd"
