@@ -25,13 +25,12 @@ resource "aws_launch_template" "docker_lt" {
   user_data = base64encode(<<-EOF
     #!/bin/bash
     yum update -y
-    yum install -y docker
-    systemctl start docker
-    systemctl enable docker
+    yum install -y nginx
+    systemctl start nginx
+    systemctl enable nginx
     dnf install -y amazon-ssm-agent
     systemctl enable amazon-ssm-agent
     systemctl start amazon-ssm-agent
-    usermod -aG docker ec2-user
   EOF
   )
 
