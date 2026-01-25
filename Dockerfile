@@ -4,11 +4,14 @@ WORKDIR /app
 
 COPY app/requirements.txt /app/
 
-RUN pip install --no-cache-dir -r requirements.txt    # install python libraries
+# install python libraries
+RUN pip install --no-cache-dir -r requirements.txt    
 
 COPY app/ /app/
 
-EXPOSE 8000     # the port the app listens on
+# the port the app listens on
+EXPOSE 8000     
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"] # 0.0.0.0 = accept traffic from outside container
+ # 0.0.0.0 = accept traffic from outside container
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
