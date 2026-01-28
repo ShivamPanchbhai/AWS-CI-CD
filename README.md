@@ -1,51 +1,29 @@
-Base
+1) What this service does | Service starts after HTTP hits it
+	
+	• Client sends ECG image + metadata over HTTPS | client is establishing encrypted TLS connection with ALB 
+	• HTTPS terminates at ALB | ALB decrypts the traffic(https) and reads it
+	• ALB forwards request over HTTP
+	• Our service receives it
+	• Service validates, stores, and later serves data
 
-• Protocol: HTTP
+2) What it accepts
 
-• Format: JSON
+	What the service accepts
+	
+  • HTTPS request
+	• ECG image (file)
+	• Metadata
+	 – patient_name
+	 – MRN
+	 – DOB
+	 – timestamp
 
-• Auth: IAM role (keyless)
+3) What it returns
+	
+	• status: stored
+	• record_id: abc123
+	
+4) What it does not do
 
-• Runtime: Python
+	• It does not handle authentication screens
 
-• Containerized
-
-Endpoints
-
-POST /ai
-Purpose
-• Accepts text
-• Calls AWS Bedrock
-• Returns AI response
-
-Request
-• Body
-– text: string
-
-Response
-• Body
-– response: string
-– model: string
-
-Status codes
-• 200 success
-• 400 invalid input
-• 500 internal error
-
-GET /health
-Purpose
-• Health check for ALB / service
-
-Response
-• Body
-– status: ok
-
-Status codes
-• 200 healthy
-
-Non-goals (important)
-• No auth at API layer
-• No session state
-• No database
-• No retries logic
-• No prompt engineering
