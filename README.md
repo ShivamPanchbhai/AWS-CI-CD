@@ -45,11 +45,17 @@ Request
 • Fields
 
 – ecg_file (image)
+
 – MRN (required)
+
 – patient_name (optional)
+
 – DOB (optional)
+
 – timestamp (required)
 
 Response
+
 • status
+
 • record_id
