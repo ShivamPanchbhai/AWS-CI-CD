@@ -34,3 +34,19 @@
 
 	• It does not handle authentication screens
 
+5) Endpoint
+
+   • POST /ecg
+
+Request
+• Type: multipart/form-data
+• Fields
+– ecg_file (image)
+– MRN (required)
+– patient_name (optional)
+– DOB (optional)
+– timestamp (required)
+
+Response
+• status
+• record_id
