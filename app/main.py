@@ -1,19 +1,23 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, UploadFile, File, Form # fastapi is the python module in lowercase & FastAPI is the class inside that module in uppercase
 
-app = FastAPI()
+app = FastAPI() # creating one instance of FastAPI so after this, app variable will behave like FastAPI
 
-class AIRequest(BaseModel):
-    text: str
+@app.get("/health")  # calling FastAPI’s get() method with "/health"
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+def health():        # health function
+    return {"status": "ok"} # Function returns {"status": "ok"}
 
-@app.post("/ai")
-def ai(request: AIRequest):
+@app.post("/ecg")    # calling FastAPI’s post() method with "/ecg"
+ 
+def upload_ecg(
+    ecg_file    :  UploadFile  = File(...),
+    mrn         :      str     = Form(...),
+    patient_name:      str     | None = Form(None),
+    dob         :      str     | None = Form(None),
+    timestamp   :      str     | Form(..)
+):
     return {
-        "response": "placeholder",
-        "model": "bedrock"
+        "status": "stored",
+        "record_id": "dummy-id-123"
     }
 
