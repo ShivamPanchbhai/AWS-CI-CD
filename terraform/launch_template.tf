@@ -20,9 +20,12 @@ resource "aws_launch_template" "docker_lt" {
   user_data = base64encode(<<-EOF
     #!/bin/bash
     yum update -y
-    yum install -y nginx
+    yum install -y nginx          ## Nginx = infrastructure smoke test
     systemctl start nginx
     systemctl enable nginx
+    yum install -y docker
+    systemctl enable docker
+    systemctl start docker
     dnf install -y amazon-ssm-agent
     systemctl enable amazon-ssm-agent
     systemctl start amazon-ssm-agent
