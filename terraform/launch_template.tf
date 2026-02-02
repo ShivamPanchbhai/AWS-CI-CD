@@ -17,7 +17,7 @@ resource "aws_launch_template" "docker_lt" {
     }
   }
 
-  user_data = base64encode(<<-EOF  
+  user_data = base64encode(<<-EOF
   #!/bin/bash
   dnf update -y                 # user_data runs as root so no sudo
   dnf install -y nginx          # Nginx = infrastructure smoke test
