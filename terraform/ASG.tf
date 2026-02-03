@@ -20,6 +20,10 @@ resource "aws_autoscaling_group" "docker_asg" {
 
   vpc_zone_identifier = data.aws_subnets.default.ids
 
+ target_group_arns = [
+    data.aws_lb_target_group.alb.arn
+  ]
+
   launch_template {
     id      = aws_launch_template.docker_lt.id
     version = "$Latest"
