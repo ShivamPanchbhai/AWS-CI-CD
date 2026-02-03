@@ -11,7 +11,7 @@ resource "aws_launch_template" "docker_lt" {
     device_name = "/dev/xvda"
 
     ebs {
-      volume_size           = 8
+      volume_size           = 30
       volume_type           = "gp3"
       delete_on_termination = true
     }
