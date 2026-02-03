@@ -32,21 +32,21 @@ jobs:
           aws ecr get-login-password --region ap-south-1 \
           | docker login --username AWS --password-stdin 306991549269.dkr.ecr.ap-south-1.amazonaws.com
 
-      # 4. Build Docker image for the app
+      # 4. Build Docker image with unique tag (commit SHA)
       - name: Build Docker image
         run: |
-          docker build -t ehr-service .
+          docker build -t ehr-service:${{ github.sha }} .
 
-      # 5. Tag image with ECR repo URI
+      # 5. Tag image for ECR
       - name: Tag Docker image
         run: |
-          docker tag ehr-service:latest \
-          306991549269.dkr.ecr.ap-south-1.amazonaws.com/ehr-service:latest
+          docker tag ehr-service:${{ github.sha }} \
+          306991549269.dkr.ecr.ap-south-1.amazonaws.com/ehr-service:${{ github.sha }}
 
       # 6. Push image to ECR
       - name: Push Docker image to ECR
         run: |
-          docker push 306991549269.dkr.ecr.ap-south-1.amazonaws.com/ehr-service:latest
+          docker push 306991549269.dkr.ecr.ap-south-1.amazonaws.com/ehr-service:${{ github.sha }}
 
       # 7. Setup Terraform
       - name: Setup Terraform
