@@ -31,7 +31,7 @@ resource "aws_autoscaling_group" "docker_asg" {
     version = "$Latest"
   }
 
-  health_check_type         = "EC2"
+  health_check_type         = "ELB"
   health_check_grace_period = 60
 
   instance_refresh {
