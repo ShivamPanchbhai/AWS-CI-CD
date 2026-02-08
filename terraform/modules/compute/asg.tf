@@ -11,10 +11,6 @@ data "aws_subnets" "default" {
   }
 }
 
-data "aws_lb_target_group" "ContainerTG" {
-  name = "ContainerTG"
-}
-
 resource "aws_autoscaling_group" "docker_asg" {
   name = "EC2-ASG"
 
