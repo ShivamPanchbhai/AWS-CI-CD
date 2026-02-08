@@ -45,7 +45,7 @@ resource "aws_lb_listener" "http" {
     status_code = "HTTP_301"
   }
 }
-
+}
 
 ############################################
 # ALB Listener (HTTPS)
