@@ -14,4 +14,8 @@ resource "aws_ecr_repository" "ehr" {
     # Automatically scan images on every push
     scan_on_push = true
   }
+
+lifecycle {
+    prevent_destroy = true
+  }
 }
