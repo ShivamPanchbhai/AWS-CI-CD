@@ -92,7 +92,7 @@ module "compute" {
   subnet_ids = data.aws_subnets.default.ids
 
   # ALB Target Group ARN
-  target_group_arn = target_group_arn = module.alb.target_group_arn
+  target_group_arn = module.alb.target_group_arn
 }
 
 ############################################
