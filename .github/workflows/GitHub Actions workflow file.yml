@@ -57,6 +57,11 @@ jobs:
         run: terraform init
         working-directory: terraform
 
+      - name: Remove root ECR from Terraform state (one-time)
+        run: terraform state rm aws_ecr_repository.ehr
+        working-directory: terraform
+
+
       # 9. Terraform apply (infra changes)
       - name: Terraform Apply
         run: terraform apply -auto-approve -var="image_tag=${{ github.sha }}"
