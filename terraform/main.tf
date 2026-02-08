@@ -110,6 +110,7 @@ module "compute" {
   # ALB Target Group ARN
   target_group_arn = module.alb.target_group_arn
   alb_security_group_id = module.alb.alb_security_group_id
+  vpc_id = data.aws_vpc.default.id
 }
 
 ############################################
