@@ -105,9 +105,11 @@ module "compute" {
 module "alb" {
   source = "./modules/alb"
 
-  vpc_id       = data.aws_vpc.default.id
-  subnet_ids   = data.aws_subnets.default.ids
-  service_name = "ehr"
+  vpc_id           = data.aws_vpc.default.id
+  subnet_ids       = data.aws_subnets.default.ids
+  service_name     = "ehr"
+  certificate_arn  = aws_acm_certificate_validation.this.certificate_arn
 }
+
 
 
