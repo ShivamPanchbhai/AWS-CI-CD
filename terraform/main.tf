@@ -29,6 +29,23 @@ provider "aws" {
 }
 
 ############################################
+# Networking (default VPC + subnets)
+############################################
+
+# Default VPC
+data "aws_vpc" "default" {
+  default = true
+}
+
+# All subnets in the default VPC
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+############################################
 # Data sources
 ############################################
 
