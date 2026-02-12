@@ -26,4 +26,9 @@ variable "service_name" {
   type = string
 }
 
+variable "instance_profile_name" {
+  description = "IAM instance profile name for EC2 instances"
+  type        = string
+}
+
 
