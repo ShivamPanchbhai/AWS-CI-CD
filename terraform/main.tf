@@ -112,6 +112,7 @@ module "compute" {
   alb_security_group_id = module.alb.alb_security_group_id
   vpc_id = data.aws_vpc.default.id
   service_name = "ehr"
+  instance_profile_name = module.iam.instance_profile_name
 }
 
 ############################################
