@@ -139,5 +139,11 @@ module "iam" {
   source = "./modules/iam"
 }
 
-
+#############################
+            # ACM
+#############################
+module "acm" {
+  source      = "./modules/acm"
+  domain_name = "shivam.store"
+}
 
