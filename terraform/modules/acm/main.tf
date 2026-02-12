@@ -1,13 +1,3 @@
-########################################################
-# Input Variable
-# Domain name passed from root module
-########################################################
-
-variable "domain_name" {
-  description = "Primary domain for HTTPS certificate"
-  type        = string
-}
-
 ############################################
 # Lookup existing public Route53 hosted zone
 # This assumes hosted zone is already created manually
