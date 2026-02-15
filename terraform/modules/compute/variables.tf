@@ -31,4 +31,13 @@ variable "instance_profile_name" {
   type        = string
 }
 
+variable "region" {
+  type = string
+}
+
+variable "repository_url" {
+  type = string
+}
+
+
 
