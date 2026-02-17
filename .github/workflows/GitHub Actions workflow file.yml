@@ -40,9 +40,8 @@ jobs:
       # Required before pushing Docker images
       ############################################################
       - name: Login to Amazon ECR
-        run: |
-          aws ecr get-login-password --region ap-south-1 \
-          | docker login --username AWS --password-stdin 306991549269.dkr.ecr.ap-south-1.amazonaws.com
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
       ############################################################
       # 4️⃣ Build Docker image
@@ -57,8 +56,8 @@ jobs:
       ############################################################
       - name: Tag Docker image
         run: |
-          docker tag ehr-service:${{ github.sha }} \
-          306991549269.dkr.ecr.ap-south-1.amazonaws.com/ehr-service:${{ github.sha }}
+         docker tag ehr-service:${{ github.sha }} \
+         ${{ steps.login-ecr.outputs.registry }}/ehr-service:${{ github.sha }}
 
       ############################################################
       # 6️⃣ Push image to ECR
@@ -66,7 +65,7 @@ jobs:
       ############################################################
       - name: Push Docker image to ECR
         run: |
-          docker push 306991549269.dkr.ecr.ap-south-1.amazonaws.com/ehr-service:${{ github.sha }}
+          docker push ${{ steps.login-ecr.outputs.registry }}/ehr-service:${{ github.sha }}
 
       ############################################################
       # 7️⃣ Setup Terraform
