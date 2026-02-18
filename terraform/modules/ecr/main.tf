@@ -31,7 +31,6 @@ resource "aws_ecr_lifecycle_policy" "policy" {
         description  = "Keep only last 5 images"
         selection = {
           tagStatus     = "tagged"
-          tagPrefixList = [""]    # applies to all tags
           countType     = "imageCountMoreThan"
           countNumber   = 5
         }
