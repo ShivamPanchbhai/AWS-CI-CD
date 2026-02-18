@@ -44,7 +44,7 @@ resource "aws_ecr_lifecycle_policy" "policy" {
         rulePriority = 2
         description  = "Expire images older than 30 days"
         selection = {
-          tagStatus   = "any"
+          tagStatus   = "untagged"
           countType   = "sinceImagePushed"
           countUnit   = "days"
           countNumber = 30
