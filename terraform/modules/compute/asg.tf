@@ -54,9 +54,6 @@ resource "aws_autoscaling_group" "this" {
     preferences {
       min_healthy_percentage = 50
     }
-
-    # Ensures immutable rollout on LT version change
-    triggers = ["launch_template"]
   }
 
   ######################################################
