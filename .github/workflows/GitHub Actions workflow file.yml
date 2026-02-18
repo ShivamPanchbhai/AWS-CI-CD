@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "terraform/**"
+      - "app/**"
 
 # Required for GitHub OIDC authentication
 # id-token: write -> allows GitHub to request OIDC token
