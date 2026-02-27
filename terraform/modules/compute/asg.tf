@@ -4,27 +4,28 @@
 ########################################################
 
 resource "aws_autoscaling_group" "this" {
-  # Name derived from service name for reusability
+
   name = "${var.service_name}-asg"
 
   ######################################################
-  # High Availability Configuration
+  # Capacity Configuration
   ######################################################
 
   min_size         = 2
-  max_size         = 2
+  max_size         = 10
   desired_capacity = 2
 
-  # Subnets passed from root (do NOT assume default VPC)
+  ######################################################
+  # Multi-AZ Placement
+  ######################################################
+
   vpc_zone_identifier = var.subnet_ids
-  # If var.subnet_ids contains subnets from different Availability Zones Then ASG will automatically distribute instances across those AZs.
 
   ######################################################
-  # Attach ASG to Target Group
+  # Attach ASG to ALB Target Group
   ######################################################
 
-  # Target group ARN passed from ALB module
-  target_group_arns = [var.target_group_arn] # This attaches ASG → Target Group.
+  target_group_arns = [var.target_group_arn]
 
   ######################################################
   # Launch Template Configuration
@@ -37,15 +38,14 @@ resource "aws_autoscaling_group" "this" {
 
   ######################################################
   # Health Check Integration
-  # ELB type enables ALB health check feedback
   ######################################################
 
-  health_check_type         = "ELB" # ASG listens to ALB health state
+  # Uses ALB health checks instead of EC2 status checks
+  health_check_type         = "ELB"
   health_check_grace_period = 60
 
   ######################################################
-  # Rolling Instance Refresh
-  # Triggered when launch template changes
+  # Rolling Instance Refresh (Immutable Deployments)
   ######################################################
 
   instance_refresh {
@@ -64,5 +64,27 @@ resource "aws_autoscaling_group" "this" {
     key                 = "Name"
     value               = "${var.service_name}-ec2"
     propagate_at_launch = true
+  }
+}
+
+########################################################
+# TARGET TRACKING SCALING POLICY
+# Automatically adjusts instance count based on CPU
+########################################################
+
+resource "aws_autoscaling_policy" "cpu_target_tracking" {
+
+  name                   = "${var.service_name}-cpu-scaling"
+  autoscaling_group_name = aws_autoscaling_group.this.name
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 60.0
+
   }
 }
