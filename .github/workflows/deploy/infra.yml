@@ -1,12 +1,30 @@
+############################################################
+# INFRASTRUCTURE DEPLOYMENT WORKFLOW
+#
+# Purpose:
+# Deploy or update AWS infrastructure using Terraform.
+#
+# Trigger:
+# Runs only when files inside terraform/ are modified
+# and pushed to the main branch.
+############################################################
+
 name: Infra Deploy
 
 on:
   push:
     branches:
       - main
+    # Only trigger when Terraform code changes
     paths:
       - "terraform/**"
 
+############################################################
+# Required for GitHub OIDC authentication
+#
+# id-token: write -> allows GitHub to request OIDC token
+# contents: read  -> allows repo checkout
+############################################################
 permissions:
   id-token: write
   contents: read
@@ -16,22 +34,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      ########################################################
+      # 1️⃣ Checkout Repository
+      # Pull latest Terraform configuration
+      ########################################################
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      ########################################################
+      # 2️⃣ Authenticate to AWS via OIDC
+      # No static access keys used.
+      # GitHub assumes pre-created deploy IAM role.
+      ########################################################
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::306991549269:role/github-actions-deploy-role
           aws-region: ap-south-1
 
+      ########################################################
+      # 3️⃣ Setup Terraform CLI
+      ########################################################
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      ########################################################
+      # 4️⃣ Initialize Terraform
+      # Connects to remote S3 backend
+      ########################################################
       - name: Terraform Init
         run: terraform init
         working-directory: terraform
 
+      ########################################################
+      # 5️⃣ Apply Infrastructure Changes
+      # Creates or updates AWS resources
+      ########################################################
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: terraform
