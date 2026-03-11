@@ -64,6 +64,7 @@ FastAPI Application
 │
 ├── app/
 │   ├── Dockerfile
+|   ├── nginx.conf
 │   ├── main.py
 │   └── requirements.txt
 │
