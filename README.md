@@ -20,8 +20,9 @@ The platform is structured into **five architectural layers**:
 
 ---
 
-# Architecture Diagram
-'''
+## Architecture Diagram
+
+```
 Client
   |
   v
@@ -41,12 +42,13 @@ Docker Container
   |
   v
 FastAPI Application
-
-'''
+```
 
 ---
 
-# Repository Structure
+## Repository Structure
+
+```
 .
 ├── bootstrap/
 │   └── bootstrap.tf
@@ -70,10 +72,7 @@ FastAPI Application
         ├── infra.yml
         ├── app-deploy.yml
         └── destroy.yml
-
-
----
-
+```
 # 1. Bootstrap Layer (Foundation)
 
 This layer establishes the **trust boundary and Terraform backend** required before CI/CD pipelines can run.
