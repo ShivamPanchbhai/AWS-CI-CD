@@ -22,23 +22,23 @@ The platform is structured into **five architectural layers**:
 
 # Architecture Diagram
 Client
-│
-▼
+  |
+  v
 Route53 (DNS)
-│
-▼
+  |
+  v
 Application Load Balancer (HTTPS)
-│
-▼
+  |
+  v
 Target Group
-│
-▼
+  |
+  v
 Auto Scaling Group (EC2)
-│
-▼
+  |
+  v
 Docker Container
-│
-▼
+  |
+  v
 FastAPI Application
 
 
@@ -47,27 +47,27 @@ FastAPI Application
 # Repository Structure
 .
 ├── bootstrap/
-│ └── bootstrap.tf
+│   └── bootstrap.tf
 │
 ├── terraform/
-│ ├── modules/
-│ │ ├── ecr/
-│ │ ├── iam/
-│ │ ├── acm/
-│ │ ├── alb/
-│ │ └── compute/
-│ └── main.tf
+│   ├── modules/
+│   │   ├── ecr/
+│   │   ├── iam/
+│   │   ├── acm/
+│   │   ├── alb/
+│   │   └── compute/
+│   └── main.tf
+│
 ├── app/
-│ ├── Dockerfile
-│ ├── main.py
-│ └── requirements.txt
+│   ├── Dockerfile
+│   ├── main.py
+│   └── requirements.txt
 │
 └── .github/
-└── workflows/
-├── infra.yml
-├── app-deploy.yml
-└── destroy.yml
-
+    └── workflows/
+        ├── infra.yml
+        ├── app-deploy.yml
+        └── destroy.yml
 
 
 ---
