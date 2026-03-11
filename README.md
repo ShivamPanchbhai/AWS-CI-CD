@@ -21,6 +21,7 @@ The platform is structured into **five architectural layers**:
 ---
 
 # Architecture Diagram
+'''
 Client
   |
   v
@@ -41,6 +42,7 @@ Docker Container
   v
 FastAPI Application
 
+'''
 
 ---
 
