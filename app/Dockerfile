@@ -19,7 +19,7 @@ COPY app/ /app/
 # copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# expose nginx port
+# expose nginx port i.e., container listens on port 8000.
 EXPOSE 8000
 
 # start uvicorn on 8001 and nginx on 8000
