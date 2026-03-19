@@ -39,5 +39,9 @@ variable "repository_url" {
   type = string
 }
 
+variable "prometheus_sg_id" {
+  description = "Security group for Prometheus access"
+  type        = string
+}
 
 
