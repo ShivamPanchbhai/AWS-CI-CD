@@ -7,9 +7,12 @@ on:
     paths:
       - "app/**"
 
-permissions:
-  id-token: write
-  contents: read
+  workflow_dispatch:
+
+  workflow_run:
+    workflows: ["Infra Deploy"]   # name of your infra workflow
+    types:
+      - completed
 
 jobs:
   deploy:
