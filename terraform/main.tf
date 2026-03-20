@@ -100,6 +100,33 @@ module "acm" {
 }
 
 ############################################################
+# MODULE: Prometheus security group
+############################################################
+
+resource "aws_security_group" "prometheus_sg" {
+  name        = "prometheus-sg"
+  description = "Allow Prometheus to scrape Node Exporter"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Prometheus scrape"
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+
+    # restrict later (for now allow)
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+############################################################
 # MODULE: ALB (Ingress Layer)
 ############################################################
 
