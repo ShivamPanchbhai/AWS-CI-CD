@@ -163,4 +163,9 @@ module "compute" {
   # Logical service name
   ##########################################################
   service_name = "ehr"
+
+  ##########################################################
+  # prometheus
+  ##########################################################
+   prometheus_sg_id = aws_security_group.prometheus_sg.id
 }
