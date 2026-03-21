@@ -21,3 +21,8 @@ variable "domain_name" {
   description = "Public domain for DNS alias record"
   type        = string
 }
+
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
+}
