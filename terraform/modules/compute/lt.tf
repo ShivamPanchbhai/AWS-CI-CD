@@ -55,7 +55,7 @@ resource "aws_launch_template" "docker_lt" {
   # IAM Instance Profile
   ############################################
   iam_instance_profile {
-    name = var.instance_profile_name
+  name = "ec2-runtime-instance-profile"
   }
 
   ############################################
