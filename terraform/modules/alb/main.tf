@@ -6,7 +6,7 @@
 resource "aws_security_group" "alb_sg" {
   name        = "${var.service_name}-alb-sg"
   description = "Allow HTTP and HTTPS to ALB"
-  vpc_id      = var.vpc_id
+  vpc_id      =  data.aws_vpc.default.id
 
   ingress {
     from_port   = 80
