@@ -36,9 +36,23 @@ permissions:
 
 jobs:
   infra:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # if the app workflow fails infra should not trigger
-    runs-on: ubuntu-latest
+    # This condition handles TWO trigger types:
+    #
+    # 1. push → when terraform/** changes
+    #    → always run infra
+    #
+    # 2. workflow_run → triggered after app workflow
+    #    → run ONLY if app workflow succeeded
+    #
+    # Why needed:
+    # Without this, GitHub tries to evaluate workflow_run fields
+    # even during push events → breaks OIDC / job execution
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
 
+    runs-on: ubuntu-latest
+    
     steps:
 
       ########################################################
