@@ -7,11 +7,6 @@ variable "service_name" {
   type        = string
 }
 
-variable "vpc_id" {
-  description = "VPC where ALB will be deployed"
-  type        = string
-}
-
 variable "subnet_ids" {
   description = "Public subnets for ALB"
   type        = list(string)
