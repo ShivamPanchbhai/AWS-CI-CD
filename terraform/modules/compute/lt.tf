@@ -82,7 +82,7 @@ set -e
 # OS Update + Base Packages
 ############################################
 dnf update -y
-dnf install -y docker amazon-ssm-agent awscli curl
+dnf install -y docker amazon-ssm-agent awscli
 
 ############################################
 # Enable Services
