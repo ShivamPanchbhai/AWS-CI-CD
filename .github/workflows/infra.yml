@@ -36,6 +36,7 @@ permissions:
 
 jobs:
   infra:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # if the app workflow fails infra should not trigger
     runs-on: ubuntu-latest
 
     steps:
