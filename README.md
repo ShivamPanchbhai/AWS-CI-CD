@@ -25,42 +25,7 @@ It implements a **fully automated, immutable deployment pipeline** where infrast
 
 ## Architecture 
 
-```text
-                     ┌──────────────────────────┐
-                     │        Client            │
-                     └──────────┬───────────────┘
-                                │
-                                ▼
-                     ┌──────────────────────────┐
-                     │      Route 53 (DNS)      │
-                     └──────────┬───────────────┘
-                                │
-                                ▼
-                     ┌──────────────────────────┐
-                     │  ALB (HTTPS + TLS ACM)   │
-                     └──────────┬───────────────┘
-                                │
-                                ▼
-                     ┌──────────────────────────┐
-                     │     Target Group         │
-                     └──────────┬───────────────┘
-                                │
-                ┌───────────────┴────────────────┐
-                ▼                                ▼
-     ┌──────────────────┐             ┌──────────────────┐
-     │   EC2 Instance   │             │   EC2 Instance   │
-     │   (ASG - AZ1)    │             │   (ASG - AZ2)    │
-     └────────┬─────────┘             └────────┬─────────┘
-              │                                │
-              ▼                                ▼
-     ┌──────────────────┐             ┌──────────────────┐
-     │ Docker Container │             │ Docker Container │
-     │ nginx + FastAPI  │             │ nginx + FastAPI  │
-     └────────┬─────────┘             └────────┬─────────┘
-              │                                │
-              ▼                                ▼
-        /health endpoint                /health endpoint
-```
+![Architecture Diagram](./architecture-diagram.png)
 
 ---
 
