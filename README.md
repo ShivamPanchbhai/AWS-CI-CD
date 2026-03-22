@@ -2,6 +2,14 @@
 
 ## AWS CI/CD Infrastructure – Cloud-Native Immutable Platform
 
+![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazonaws&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-IaC-purple?logo=terraform)
+![Docker](https://img.shields.io/badge/Docker-Container-blue?logo=docker)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-black?logo=githubactions)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green?logo=fastapi)
+![Nginx](https://img.shields.io/badge/Nginx-Reverse_Proxy-darkgreen?logo=nginx)
+![Platform](https://img.shields.io/badge/Architecture-Platform_Engineering-blue)
+
 This project demonstrates a **production-style AWS platform** built using Terraform and GitHub Actions with OIDC authentication.
 
 It implements a **fully automated, immutable deployment pipeline** where infrastructure, application, and runtime are all controlled through Git.
