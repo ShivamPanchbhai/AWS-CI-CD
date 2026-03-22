@@ -10,6 +10,10 @@
 ![Nginx](https://img.shields.io/badge/Nginx-Reverse_Proxy-darkgreen?logo=nginx)
 ![Platform](https://img.shields.io/badge/Architecture-Platform_Engineering-blue)
 
+![App Deploy](https://github.com/ShivamPanchbhai/AWS-CI-CD/actions/workflows/app-deploy.yml/badge.svg)
+![Infra Deploy](https://github.com/ShivamPanchbhai/AWS-CI-CD/actions/workflows/infra.yml/badge.svg)
+![Destroy](https://github.com/ShivamPanchbhai/AWS-CI-CD/actions/workflows/destroy.yml/badge.svg)
+
 This project demonstrates a **production-style AWS platform** built using Terraform and GitHub Actions with OIDC authentication.
 
 It implements a **fully automated, immutable deployment pipeline** where infrastructure, application, and runtime are all controlled through Git.
