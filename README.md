@@ -48,12 +48,14 @@ Key outcome:
 
 Modular infrastructure provisioning:
 
+```text
 Modules:
 • ECR → container registry
 • IAM → roles & instance profile
 • ACM → TLS certificates
 • ALB → HTTPS ingress
 • Compute → Launch Template + ASG
+```
 
 Key features:
 
