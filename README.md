@@ -10,7 +10,7 @@
 ![Nginx](https://img.shields.io/badge/Nginx-Reverse_Proxy-darkgreen?logo=nginx)
 ![Platform](https://img.shields.io/badge/Architecture-Platform_Engineering-blue)
 
-![App Deploy](https://github.com/ShivamPanchbhai/AWS-CI-CD/actions/workflows/app-deploy.yml/badge.svg)
+![App Deploy](https://github.com/ShivamPanchbhai/AWS-CI-CD/actions/workflows/app_deploy.yml/badge.svg)
 ![Infra Deploy](https://github.com/ShivamPanchbhai/AWS-CI-CD/actions/workflows/infra.yml/badge.svg)
 ![Destroy](https://github.com/ShivamPanchbhai/AWS-CI-CD/actions/workflows/destroy.yml/badge.svg)
 
