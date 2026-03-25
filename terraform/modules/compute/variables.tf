@@ -49,3 +49,4 @@ variable "vpc_cidr" {
   type        = string
 }
 
+variable "prometheus_sg_id" {}
