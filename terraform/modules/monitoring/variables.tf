@@ -18,3 +18,7 @@ variable "subnet_id" {}
 # (Amazon Linux 2023 )
 ############################################
 variable "ami_id" {}
+
+variable "prometheus_instance_profile_name" {
+  type = string
+}
