@@ -149,6 +149,9 @@ module "monitoring" {
   # Base OS image for monitoring EC2
   # (Amazon Linux in our case)
   ami_id = data.aws_ami.amazon_linux.id
+
+  prometheus_instance_profile_name = module.iam.prometheus_instance_profile_name
+
 }
 ############################################################
 # MODULE: COMPUTE (Runtime Layer)
