@@ -22,3 +22,7 @@ variable "ami_id" {}
 variable "prometheus_instance_profile_name" {
   type = string
 }
+
+variable "prometheus_role_name" {
+  type = string
+}
