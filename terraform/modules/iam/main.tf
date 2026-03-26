@@ -106,15 +106,3 @@ resource "aws_iam_role_policy_attachment" "prometheus_ssm_core" {
   role       = aws_iam_role.prometheus.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
-
-#############################
-# Outputs (for other modules)
-#############################
-
-output "ec2_runtime_instance_profile_name" {
-  value = aws_iam_instance_profile.ec2_runtime.name
-}
-
-output "prometheus_role_name" {
-  value = aws_iam_role.prometheus.name
-}
