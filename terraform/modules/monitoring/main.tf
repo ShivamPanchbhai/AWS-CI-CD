@@ -76,7 +76,7 @@ dnf install -y wget
 cd /opt
 
 # Fetch latest Prometheus binary
-wget https://github.com/prometheus/prometheus/releases/latest/download/prometheus-2.51.2.linux-amd64.tar.gz
+wget https://github.com/prometheus/prometheus/releases/download/v2.51.2/prometheus-2.51.2.linux-amd64.tar.gz
 
 # Extract it
 tar -xvf prometheus-2.51.2.linux-amd64.tar.gz
