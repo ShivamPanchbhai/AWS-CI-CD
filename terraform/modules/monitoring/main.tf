@@ -68,10 +68,10 @@ resource "aws_instance" "monitoring" {
   # attaching monitoring instance profile to monitoring EC2 IAM Role
   iam_instance_profile = var.prometheus_instance_profile_name
 
-  ############################################
-  # User Data (runs at instance startup)
-  ############################################
-  user_data = <<-EOF
+############################################
+# User Data (runs at instance startup)
+############################################
+user_data = <<-EOF
 #!/bin/bash
 set -e
 
@@ -127,22 +127,22 @@ EOT
   --config.file=/opt/prometheus/prometheus.yml \
   --storage.tsdb.path=/opt/prometheus/data \
   --web.listen-address=":9090" &
-EOF
 
 ############################################
 # Install Grafana
 ############################################
 
-echo "[grafana]
+cat <<EOF_GRAFANA > /etc/yum.repos.d/grafana.repo
+[grafana]
 name=Grafana
 baseurl=https://rpm.grafana.com
 repo_gpgcheck=1
 enabled=1
 gpgcheck=1
-gpgkey=https://rpm.grafana.com/gpg.key" > /etc/yum.repos.d/grafana.repo
+gpgkey=https://rpm.grafana.com/gpg.key
+EOF_GRAFANA
 
 dnf install -y grafana
-
 ############################################
 # Start Grafana
 ############################################
@@ -152,6 +152,7 @@ systemctl daemon-reload
 systemctl enable grafana-server
 systemctl start grafana-server
 
+EOF
 ############################################
 # Tags (for identification in AWS)
 ############################################
