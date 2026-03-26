@@ -134,7 +134,7 @@ EOF
 ############################################
 
 # Add Grafana repo
-cat <<EOF_REPO > /etc/yum.repos.d/grafana.repo
+cat <<'EOF_REPO' > /etc/yum.repos.d/grafana.repo
 [grafana]
 name=Grafana
 baseurl=https://rpm.grafana.com
