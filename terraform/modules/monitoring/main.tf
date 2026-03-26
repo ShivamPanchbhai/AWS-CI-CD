@@ -22,6 +22,17 @@ resource "aws_security_group" "monitoring_sg" {
   }
 
   ############################################
+  # Allow access to Grafana UI
+  ############################################
+ingress {
+  from_port   = 3000
+  to_port     = 3000
+  protocol    = "tcp"
+
+  # Grafana UI access
+  cidr_blocks = ["0.0.0.0/0"]
+}
+  ############################################
   # Outbound traffic (very important)
   ############################################
   egress {
@@ -118,6 +129,32 @@ EOT
   --web.listen-address=":9090" &
 EOF
 
+############################################
+# Install Grafana
+############################################
+
+# Add Grafana repo
+cat <<EOF_REPO > /etc/yum.repos.d/grafana.repo
+[grafana]
+name=Grafana
+baseurl=https://rpm.grafana.com
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://rpm.grafana.com/gpg.key
+EOF_REPO
+
+# Install Grafana
+dnf install -y grafana
+
+############################################
+# Start Grafana
+############################################
+
+systemctl daemon-reexec
+systemctl daemon-reload
+systemctl enable grafana-server
+systemctl start grafana-server
   ############################################
   # Tags (for identification in AWS)
   ############################################
