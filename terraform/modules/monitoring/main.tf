@@ -133,18 +133,14 @@ EOF
 # Install Grafana
 ############################################
 
-# Add Grafana repo
-cat <<'EOF_REPO' > /etc/yum.repos.d/grafana.repo
-[grafana]
+echo "[grafana]
 name=Grafana
 baseurl=https://rpm.grafana.com
 repo_gpgcheck=1
 enabled=1
 gpgcheck=1
-gpgkey=https://rpm.grafana.com/gpg.key
-EOF_REPO
+gpgkey=https://rpm.grafana.com/gpg.key" > /etc/yum.repos.d/grafana.repo
 
-# Install Grafana
 dnf install -y grafana
 
 ############################################
@@ -155,9 +151,10 @@ systemctl daemon-reexec
 systemctl daemon-reload
 systemctl enable grafana-server
 systemctl start grafana-server
-  ############################################
-  # Tags (for identification in AWS)
-  ############################################
+
+############################################
+# Tags (for identification in AWS)
+############################################
   tags = {
     # Just helps us identify this instance in console
     Name = "monitoring-instance"
