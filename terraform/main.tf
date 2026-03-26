@@ -151,6 +151,7 @@ module "monitoring" {
   ami_id = data.aws_ami.amazon_linux.id
 
   prometheus_instance_profile_name = module.iam.prometheus_instance_profile_name
+  prometheus_role_name = module.iam.prometheus_role_name
 
 }
 ############################################################
