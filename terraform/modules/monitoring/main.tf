@@ -139,15 +139,12 @@ wget -q https://dl.grafana.com/oss/release/grafana-10.4.2-1.x86_64.rpm
 
 dnf install -y ./grafana-10.4.2-1.x86_64.rpm
 
-systemctl daemon-reload
-systemctl enable grafana-server
-systemctl start grafana-server || journalctl -u grafana-server -n 50
-
 ############################################
 # Start Grafana
 ############################################
 echo "=== STARTING GRAFANA ==="
 
+systemctl daemon-reload
 systemctl enable grafana-server
 systemctl start grafana-server
 
