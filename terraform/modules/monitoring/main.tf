@@ -70,7 +70,17 @@ dnf install -y wget
 # Install Prometheus
 ############################################
 
-dnf install -y prometheus
+cd /tmp
+
+wget -q https://github.com/prometheus/prometheus/releases/download/v2.51.2/prometheus-2.51.2.linux-amd64.tar.gz
+
+tar -xzf prometheus-2.51.2.linux-amd64.tar.gz
+
+mv prometheus-2.51.2.linux-amd64 /opt/prometheus
+
+cp /opt/prometheus/prometheus /usr/local/bin/
+cp /opt/prometheus/promtool /usr/local/bin/
+
 
 ############################################
 # Prometheus config
@@ -93,8 +103,26 @@ scrape_configs:
 EOT
 
 ############################################
-# Start Prometheus
+# Systemd service (IMPORTANT)
 ############################################
+
+cat <<EOF > /etc/systemd/system/prometheus.service
+[Unit]
+Description=Prometheus
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/prometheus \
+  --config.file=/opt/prometheus/prometheus.yml \
+  --storage.tsdb.path=/opt/prometheus/data
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
 systemctl enable prometheus
 systemctl start prometheus
 
