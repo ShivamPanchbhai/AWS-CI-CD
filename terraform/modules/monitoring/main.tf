@@ -169,11 +169,17 @@ cd /opt
 
 # -q gives clean logs
 
-wget -q https://github.com/prometheus/alertmanager/releases/latest/download/alertmanager-0.27.0.linux-amd64.tar.gz
+wget -q https://github.com/prometheus/alertmanager/releases/download/v0.27.0/alertmanager-0.27.0.linux-amd64.tar.gz
 
-tar -xvf alertmanager-0.27.0.linux-amd64.tar.gz
+tar -xzf alertmanager-0.27.0.linux-amd64.tar.gz
 
-mv alertmanager-0.27.0.linux-amd64 alertmanager
+mkdir -p /opt/alertmanager
+
+mv alertmanager-0.27.0.linux-amd64/* /opt/alertmanager/
+
+chmod +x /opt/alertmanager/alertmanager
+
+mkdir -p /opt/alertmanager/data
 
 ############################################
 # Create Alertmanager config
@@ -190,8 +196,6 @@ EOF_ALERT
 # Setup Alertmanager systemd service
 ############################################
 echo "=== SETTING UP ALERTMANAGER SERVICE ==="
-
-mkdir -p /opt/alertmanager/data
 
 cat <<EOF_SERVICE > /etc/systemd/system/alertmanager.service
 
