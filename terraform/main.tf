@@ -1,3 +1,10 @@
+data "aws_subnets" "public" {
+  filter {
+    name   = "tag:Name"
+    values = ["*public*"]
+  }
+}
+
 ############################################################
 # TERRAFORM CORE CONFIGURATION
 ############################################################
@@ -144,16 +151,12 @@ module "monitoring" {
 
   # Subnet where monitoring EC2 will sit
   # (decides networking + routing behavior)
-  data "aws_subnets" "public" {
-  filter {
-    name   = "tag:Name"
-    values = ["*public*"]
-  }
-}
+
   subnet_id = data.aws_subnets.public.ids[0]
 
   # Base OS image for monitoring EC2
   # (Amazon Linux in our case)
+
   ami_id = data.aws_ami.amazon_linux.id
 
   prometheus_instance_profile_name = module.iam.prometheus_instance_profile_name
