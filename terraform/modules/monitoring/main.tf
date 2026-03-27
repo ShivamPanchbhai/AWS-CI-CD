@@ -141,7 +141,7 @@ dnf install -y ./grafana-10.4.2-1.x86_64.rpm
 
 systemctl daemon-reload
 systemctl enable grafana-server
-systemctl start grafana-server
+systemctl start grafana-server || journalctl -u grafana-server -n 50
 
 ############################################
 # Start Grafana
