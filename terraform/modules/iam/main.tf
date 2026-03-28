@@ -1,8 +1,8 @@
 #############################
-# IAM module: EC2 runtime role
+# IAM module for app instance
 #############################
 
-# EC2 runtime role (for app instances)
+# EC2 runtime role 
 resource "aws_iam_role" "ec2_runtime" {
   name = "ec2-runtime-role"
 
@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "ecs_ec2_role" {
 }
 
 #############################
-# Prometheus EC2 role (Monitoring instance)
+# IAM module for Monitoring instance
 #############################
 
 resource "aws_iam_role" "prometheus" {
@@ -71,7 +71,7 @@ resource "aws_iam_role" "prometheus" {
 
 resource "aws_iam_role_policy" "prometheus_cloudwatch" {
   name = "prometheus-cloudwatch-access"
-  role = aws_iam_role.prometheus.id
+  role = aws_iam_role.prometheus.name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -81,8 +81,7 @@ resource "aws_iam_role_policy" "prometheus_cloudwatch" {
         Action = [
           "cloudwatch:GetMetricStatistics",
           "cloudwatch:ListMetrics",
-          "autoscaling:DescribeAutoScalingGroups",
-          "ec2:DescribeInstances"
+          "autoscaling:DescribeAutoScalingGroups"
         ]
         Resource = "*"
       }
@@ -91,7 +90,7 @@ resource "aws_iam_role_policy" "prometheus_cloudwatch" {
 }
 
 #############################
-# Instance profile for Prometheus EC2
+# Instance profile for monitoring EC2
 #############################
 
 resource "aws_iam_instance_profile" "prometheus" {
@@ -106,7 +105,7 @@ resource "aws_iam_instance_profile" "prometheus" {
 # Required for EC2 auto-discovery
 resource "aws_iam_role_policy" "prometheus_ec2_discovery" {
   name = "prometheus-ec2-discovery"
-  role = aws_iam_role.prometheus.id
+  role = aws_iam_role.prometheus.name
 
   policy = jsonencode({
     Version = "2012-10-17"
