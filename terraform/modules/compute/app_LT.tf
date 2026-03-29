@@ -172,6 +172,25 @@ docker run -d \
   -p 8000:8000 \
   ${var.repository_url}:${var.image_tag}
 
+echo "Verifying container is running..."
+
+for i in {1..10}; do
+  docker ps | grep ${var.service_name} && break
+  echo "Container not running yet, retrying..."
+  sleep 5
+done
+
+if ! docker ps | grep ${var.service_name}; then
+  echo "Container failed, restarting..."
+
+  docker restart ${var.service_name}
+
+  sleep 5
+
+  if ! docker ps | grep ${var.service_name}; then
+    echo "Container STILL not running"
+  fi
+fi
 ############################################
 # WAIT FOR APP TO BE READY
 ############################################
@@ -185,7 +204,7 @@ for i in {1..60}; do
     break
   fi
 
- if [ "$i" -eq 30 ]; then
+ if [ "$i" -eq 60 ]; then
   echo "App failed to start, but keeping instance alive"
  fi
 
