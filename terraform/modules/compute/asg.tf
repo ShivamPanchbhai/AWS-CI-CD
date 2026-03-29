@@ -42,7 +42,7 @@ resource "aws_autoscaling_group" "this" {
 
   # Uses ALB health checks instead of EC2 status checks
   health_check_type         = "ELB"
-  health_check_grace_period = 60
+  health_check_grace_period = 180
 
   ######################################################
   # Rolling Instance Refresh (Immutable Deployments)
