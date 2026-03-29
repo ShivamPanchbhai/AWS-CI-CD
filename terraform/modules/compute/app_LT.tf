@@ -211,6 +211,19 @@ for i in {1..60}; do
   sleep 5
 done
 
+############################################
+# FINAL HARD GUARANTEE (BLOCK UNTIL READY)
+############################################
+echo "Ensuring app is fully ready before finishing..."
+
+until curl -s http://localhost:8000/health | grep -q "ok"; do
+  echo "App not ready yet..."
+  sleep 5
+done
+
+echo "App fully ready"
+
+
 EOF
   )
 
