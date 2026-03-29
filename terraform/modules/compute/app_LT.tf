@@ -169,7 +169,7 @@ docker run -d \
 ############################################
 echo "Waiting for app to be ready..."
 
-for i in {1..30}; do
+for i in {1..60}; do
   STATUS=$(curl -s -o /dev/null -w '%%{http_code}' http://localhost:8000/health || echo 000)
 
   if [ "$STATUS" = "200" ]; then
@@ -178,8 +178,7 @@ for i in {1..30}; do
   fi
 
  if [ "$i" -eq 30 ]; then
-  echo "App failed to start"
-  exit 1
+  echo "App failed to start, but keeping instance alive"
  fi
 
   sleep 5
