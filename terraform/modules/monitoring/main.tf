@@ -77,12 +77,20 @@ set -x
 ############################################
 # Base setup
 ############################################
-dnf install -y java-17-amazon-corretto || true
-dnf install -y wget || true
-dnf install -y amazon-ssm-agent || true
+
+dnf remove -y amazon-ssm-agent || true
+
+dnf clean all
+
+dnf install -y https://s3.ap-south-1.amazonaws.com/amazon-ssm-ap-south-1/latest/linux_amd64/amazon-ssm-agent.rpm
+
+systemctl daemon-reexec
+systemctl daemon-reload
+
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
 
+dnf install -y java-17-amazon-corretto || true
 
 echo "=== STARTING USER DATA ==="
 
