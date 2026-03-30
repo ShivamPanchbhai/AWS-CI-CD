@@ -222,7 +222,8 @@ tar -xzf alertmanager-0.27.0.linux-amd64.tar.gz
 
 mkdir -p /opt/alertmanager
 
-mv alertmanager-0.27.0.linux-amd64 /opt/alertmanager
+mv /opt/alertmanager/alertmanager-0.27.0.linux-amd64/alertmanager /opt/alertmanager/
+mv /opt/alertmanager/alertmanager-0.27.0.linux-amd64/amtool /opt/alertmanager/
 
 chmod +x /opt/alertmanager/alertmanager
 
@@ -263,9 +264,7 @@ After=network.target
 
 [Service]
 User=root
-ExecStart=/opt/alertmanager/alertmanager \
-  --config.file=/opt/alertmanager/alertmanager.yml \
-  --storage.path=/opt/alertmanager/data
+ExecStart=/opt/alertmanager/alertmanager
 
 Restart=on-failure
 RestartSec=5
@@ -341,7 +340,9 @@ Description=CloudWatch Exporter
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar 9106 /opt/cloudwatch_exporter/config.yml
+ExecStart=/usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar \
+  --config.file=/opt/cloudwatch_exporter/config.yml \
+  --web.listen-address=:9106
 Restart=on-failure
 RestartSec=5
 StandardOutput=null
