@@ -61,6 +61,11 @@ ami           = var.ami_id
 instance_type = "t3.micro"
 subnet_id     = var.subnet_id
 
+root_block_device {
+    volume_size = 16  # default is 8GB, increase to 16GB
+    volume_type = "gp3"
+  }
+
 vpc_security_group_ids = [
 aws_security_group.monitoring_sg.id
 ]
