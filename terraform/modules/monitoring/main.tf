@@ -79,7 +79,7 @@ exec > /var/log/user-data.log 2>/var/log/user-data-error.log
 set -x
 
 ############################################
-# FIX SSM
+# SSM (dont touch this or SSM will not work)
 ############################################
 dnf install -y amazon-ssm-agent
 systemctl enable amazon-ssm-agent
@@ -115,35 +115,30 @@ chmod +x /opt/prometheus/prometheus-2.51.2.linux-amd64/prometheus
 ############################################
 cat <<-EOT > /opt/prometheus/prometheus.yml
 global:
- scrape_interval: 15s
+  scrape_interval: 15s
 
 alerting:
-alertmanagers:
-- static_configs:
-- targets: ["localhost:9093"]
+  alertmanagers:
+    - static_configs:
+        - targets: ["localhost:9093"]
 
 rule_files:
-
-* /opt/prometheus/alert.rules.yml
+  - /opt/prometheus/alert.rules.yml
 
 scrape_configs:
-
-* job_name: 'node-exporter'
-  ec2_sd_configs:
-
-  * region: ap-south-1
-    port: 9100
+  - job_name: 'node-exporter'
+    ec2_sd_configs:
+      - region: ap-south-1
+        port: 9100
     relabel_configs:
-  * source_labels: [__meta_ec2_tag_Monitoring]
-    regex: node-exporter
-    action: keep
+      - source_labels: [__meta_ec2_tag_Monitoring]
+        regex: node-exporter
+        action: keep
 
-* job_name: 'cloudwatch'
-  static_configs:
-
-  * targets: ['localhost:9106']
+  - job_name: 'cloudwatch'
+    static_configs:
+      - targets: ['localhost:9106']
 EOT
-
 ############################################
 
 # Alert rules
@@ -151,10 +146,10 @@ EOT
 cat <<-EOF_RULE > /opt/prometheus/alert.rules.yml
 groups:
 
-* name: test-alerts
+- name: test-alerts
   rules:
 
-  * alert: InstanceDown
+  - alert: InstanceDown
     expr: up == 0
     for: 1m
     labels:
@@ -200,10 +195,10 @@ receiver: "email-alert"
 
 receivers:
 
-* name: "email-alert"
+- name: "email-alert"
   email_configs:
 
-  * to: "panchbhaishivam@gmail.com"
+  - to: "panchbhaishivam@gmail.com"
     send_resolved: true
 EOF_ALERT
 
@@ -222,17 +217,17 @@ region: ap-south-1
 
 metrics:
 
-* aws_namespace: AWS/AutoScaling
+- aws_namespace: AWS/AutoScaling
   aws_metric_name: GroupDesiredCapacity
   dimensions: [AutoScalingGroupName]
   statistics: [Average]
 
-* aws_namespace: AWS/AutoScaling
+- aws_namespace: AWS/AutoScaling
   aws_metric_name: GroupMaxSize
   dimensions: [AutoScalingGroupName]
   statistics: [Average]
 
-* aws_namespace: AWS/EC2
+- aws_namespace: AWS/EC2
   aws_metric_name: CPUUtilization
   dimensions: [InstanceId]
   statistics: [Average]
