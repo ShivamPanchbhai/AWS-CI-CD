@@ -247,26 +247,28 @@ nohup /opt/alertmanager/alertmanager \
 
 
 echo "=== STARTING GRAFANA ==="
-nohup /usr/sbin/grafana-server > /var/log/grafana.log 2>&1 &
+nohup /usr/sbin/grafana-server \
+  --homepath /usr/share/grafana \
+  > /var/log/grafana.log 2>&1 &
 
 echo "=== STARTING CLOUDWATCH EXPORTER ==="
 nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar \
-  9106 /opt/cloudwatch_exporter/config.yml \
+  --config.file=/opt/cloudwatch_exporter/config.yml \
+  --web.listen-address=:9106 \
   > /var/log/cloudwatch_exporter.log 2>&1 &
 
 ############################################
 
 # AUTO START ON REBOOT (CRON)
-
 ############################################
 
 (crontab -l 2>/dev/null; echo "@reboot nohup /opt/prometheus/prometheus-2.51.2.linux-amd64/prometheus --config.file=/opt/prometheus/prometheus.yml --storage.tsdb.path=/opt/prometheus/data > /var/log/prometheus.log 2>&1 &") | crontab -
 
 (crontab -l 2>/dev/null; echo "@reboot nohup /opt/alertmanager/alertmanager --config.file=/opt/alertmanager/alertmanager.yml --storage.path=/opt/alertmanager/data > /var/log/alertmanager.log 2>&1 &") | crontab -
 
-(crontab -l 2>/dev/null; echo "@reboot nohup /usr/sbin/grafana-server > /var/log/grafana.log 2>&1 &") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot nohup /usr/sbin/grafana-server --homepath /usr/share/grafana > /var/log/grafana.log 2>&1 &") | crontab -
 
-(crontab -l 2>/dev/null; echo "@reboot nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar 9106 /opt/cloudwatch_exporter/config.yml > /var/log/cloudwatch_exporter.log 2>&1 &") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar --config.file=/opt/cloudwatch_exporter/config.yml --web.listen-address=:9106 > /var/log/cloudwatch_exporter.log 2>&1 &") | crontab -
 
 echo "=== USER DATA COMPLETE ==="
 
