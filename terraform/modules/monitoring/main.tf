@@ -151,14 +151,6 @@ groups:
           severity: critical
         annotations:
           summary: "ASG reached max capacity"
-
-      - alert: MonitoringInstanceRestart
-        expr: up{job="cloudwatch"} == 0 # job="cloudwatch" -> tied to your monitoring instance
-        for: 1m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Monitoring instance might be restarting or being replaced by ASG"
 EOF_RULE
 
 ############################################
