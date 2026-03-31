@@ -232,28 +232,33 @@ EOF_CW
 # START SERVICES (NO SYSTEMD)
 ############################################
 
+set +m
+
 echo "=== STARTING PROMETHEUS ==="
 nohup /opt/prometheus/prometheus-2.51.2.linux-amd64/prometheus \
   --config.file=/opt/prometheus/prometheus.yml \
   --storage.tsdb.path=/opt/prometheus/data \
   > /var/log/prometheus.log 2>&1 &
+disown
 
 echo "=== STARTING ALERTMANAGER ==="
 nohup /opt/alertmanager/alertmanager \
   --config.file=/opt/alertmanager/alertmanager.yml \
   --storage.path=/opt/alertmanager/data \
   > /var/log/alertmanager.log 2>&1 &
-
+disown
 
 echo "=== STARTING GRAFANA ==="
 nohup /usr/sbin/grafana-server \
   --homepath /usr/share/grafana \
   > /var/log/grafana.log 2>&1 &
+disown
 
 echo "=== STARTING CLOUDWATCH EXPORTER ==="
 nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar \
   9106 /opt/cloudwatch_exporter/config.yml \
   > /var/log/cloudwatch_exporter.log 2>&1 &
+disown
 
 ############################################
 # AUTO START ON REBOOT (CRON)
