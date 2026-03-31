@@ -79,6 +79,13 @@ exec > /var/log/user-data.log 2>/var/log/user-data-error.log
 set -x
 
 ############################################
+# FIX SSM
+############################################
+dnf install -y amazon-ssm-agent
+systemctl enable amazon-ssm-agent
+systemctl start amazon-ssm-agent
+
+############################################
 # Base setup
 ############################################
 dnf install -y java-17-amazon-corretto wget || true
