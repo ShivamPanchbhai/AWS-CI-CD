@@ -253,8 +253,7 @@ nohup /usr/sbin/grafana-server \
 
 echo "=== STARTING CLOUDWATCH EXPORTER ==="
 nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar \
-  --config.file=/opt/cloudwatch_exporter/config.yml \
-  --web.listen-address=:9106 \
+  9106 /opt/cloudwatch_exporter/config.yml \
   > /var/log/cloudwatch_exporter.log 2>&1 &
 
 ############################################
@@ -268,7 +267,7 @@ nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar \
 
 (crontab -l 2>/dev/null; echo "@reboot nohup /usr/sbin/grafana-server --homepath /usr/share/grafana > /var/log/grafana.log 2>&1 &") | crontab -
 
-(crontab -l 2>/dev/null; echo "@reboot nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar --config.file=/opt/cloudwatch_exporter/config.yml --web.listen-address=:9106 > /var/log/cloudwatch_exporter.log 2>&1 &") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar 9106 /opt/cloudwatch_exporter/config.yml > /var/log/cloudwatch_exporter.log 2>&1 &") | crontab -
 
 echo "=== USER DATA COMPLETE ==="
 
