@@ -22,13 +22,13 @@ jobs:
       # 1️⃣ Checkout
       ########################################################
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       ########################################################
       # 2️⃣ OIDC Authentication
       ########################################################
       - name: Configure AWS credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::306991549269:role/github-actions-deploy-role
           aws-region: ap-south-1
@@ -66,7 +66,7 @@ jobs:
       # 7️⃣ Terraform Apply (Update image_tag)
       ########################################################
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
 
       - name: Terraform Init
         run: terraform init
