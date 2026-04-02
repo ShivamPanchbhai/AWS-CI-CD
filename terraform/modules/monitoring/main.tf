@@ -206,18 +206,18 @@ metrics:
 
 - aws_namespace: AWS/AutoScaling
   aws_metric_name: GroupDesiredCapacity
-  dimensions: [AutoScalingGroupName]
-  statistics: [Average]
+  aws_dimensions: [AutoScalingGroupName]
+  aws_statistics: [Average]
 
 - aws_namespace: AWS/AutoScaling
   aws_metric_name: GroupMaxSize
-  dimensions: [AutoScalingGroupName]
-  statistics: [Average]
+  aws_dimensions: [AutoScalingGroupName]
+  aws_statistics: [Average]
 
 - aws_namespace: AWS/EC2
   aws_metric_name: CPUUtilization
-  dimensions: [InstanceId]
-  statistics: [Average]
+  aws_dimensions: [InstanceId]
+  aws_statistics: [Average]
 EOF_CW
 
 ############################################
