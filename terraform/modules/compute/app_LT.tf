@@ -92,17 +92,17 @@ set -x
 mkdir -p /opt/stress
 cat << 'EOT' > /opt/stress/stress.sh
 #!/bin/bash
-yes > /dev/null &, # Outputs: y y y y y ...Continuously forever
-yes > /dev/null & # & ->  runs in background
-EOT # end of text It’s just a marker to tell bash: “start reading here” -> “stop reading when you see EOT again”
+yes > /dev/null & 
+yes > /dev/null & 
+EOT 
 
-# They are just labels, You can use ANY word, Examples that all work:
 
-#EOF
-#EOT
-#END
-#SCRIPT
-#XYZ
+#yes > /dev/null & # & ->  runs in background & Outputs: y y y y y ...Continuously forever
+#EOT -> end of text It’s just a marker to tell bash: “start reading here” -> “stop reading when you see EOT again”
+#END -> This is also a marker 
+#SCRIPT -> it can be anything
+#XYZ -> e.g., like this as well
+#& ->  runs in background
 
 chmod +x /opt/stress/stress.sh
 ############################################
