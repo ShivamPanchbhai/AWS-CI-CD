@@ -26,15 +26,3 @@ variable "prometheus_instance_profile_name" {
 variable "prometheus_role_name" {
   type = string
 }
-
-
-
-
-
-
-
-
-
-
-
-
