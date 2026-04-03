@@ -90,11 +90,19 @@ set -x
 # Stress test script
 ############################################
 mkdir -p /opt/stress
-cat << 'EOF' > /opt/stress/stress.sh
+cat << 'EOT' > /opt/stress/stress.sh
 #!/bin/bash
-yes > /dev/null &, # Outputs: y y y y y ...Continuously forever.
+yes > /dev/null &, # Outputs: y y y y y ...Continuously forever
 yes > /dev/null & # & ->  runs in background
-EOF
+EOT # end of text It’s just a marker to tell bash: “start reading here” -> “stop reading when you see EOT again”
+
+# They are just labels, You can use ANY word, Examples that all work:
+
+#EOF
+#EOT
+#END
+#SCRIPT
+#XYZ
 
 chmod +x /opt/stress/stress.sh
 ############################################
