@@ -203,21 +203,24 @@ cat <<-EOF_CW > /opt/cloudwatch_exporter/config.yml
 region: ap-south-1
 
 metrics:
+  - aws_namespace: AWS/AutoScaling
+    aws_metric_name: GroupDesiredCapacity
+    aws_dimensions: [AutoScalingGroupName]
+    aws_dimension_select:
+      AutoScalingGroupName: ["ehr-asg"]
+    aws_statistics: [Average]
 
-- aws_namespace: AWS/AutoScaling
-  aws_metric_name: GroupDesiredCapacity
-  aws_dimensions: [AutoScalingGroupName]
-  aws_statistics: [Average]
+  - aws_namespace: AWS/AutoScaling
+    aws_metric_name: GroupMaxSize
+    aws_dimensions: [AutoScalingGroupName]
+    aws_dimension_select:
+      AutoScalingGroupName: ["ehr-asg"]
+    aws_statistics: [Average]
 
-- aws_namespace: AWS/AutoScaling
-  aws_metric_name: GroupMaxSize
-  aws_dimensions: [AutoScalingGroupName]
-  aws_statistics: [Average]
-
-- aws_namespace: AWS/EC2
-  aws_metric_name: CPUUtilization
-  aws_dimensions: [InstanceId]
-  aws_statistics: [Average]
+  - aws_namespace: AWS/EC2
+    aws_metric_name: CPUUtilization
+    aws_dimensions: [InstanceId]
+    aws_statistics: [Average]
 EOF_CW
 
 ############################################
