@@ -96,6 +96,7 @@ resource "aws_launch_template" "docker_lt" {
 set -x
 
 
+
 ############################################
 # Stress test script
 ############################################

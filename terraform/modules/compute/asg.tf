@@ -34,7 +34,7 @@ resource "aws_autoscaling_group" "this" {
 
   launch_template {
     id      = aws_launch_template.docker_lt.id
-    version = "$Latest"
+    version = aws_launch_template.docker_lt.latest_version
   }
 
   ######################################################
@@ -57,8 +57,6 @@ resource "aws_autoscaling_group" "this" {
     preferences {
       min_healthy_percentage = 50
     }
-
-   triggers = ["launch_template"]
   }
 
   ######################################################
