@@ -9,16 +9,6 @@ variable "ami_id" {
 }
 
 ############################################
-# IMAGE TAG
-############################################
-# Docker image version (Git commit SHA)
-# Passed from CI/CD → used to pull correct image from ECR
-
-variable "image_tag" {
-  type = string
-}
-
-############################################
 # SUBNET IDS
 ############################################
 # List of subnets where EC2 instances will run

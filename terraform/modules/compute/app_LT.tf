@@ -180,10 +180,21 @@ for i in {1..5}; do
 done
 
 ############################################
+# Fetch Image Tag from SSM
+############################################
+IMAGE_TAG=$(aws ssm get-parameter \
+  --name "/ehr/image-tag" \
+  --region ${var.region} \
+  --query 'Parameter.Value' \
+  --output text)
+
+echo "Pulling image tag: $IMAGE_TAG"
+
+############################################
 # Pull Latest Image (with retry)
 ############################################
 for i in {1..5}; do
-  docker pull ${var.repository_url}:${var.image_tag} && break
+  docker pull ${var.repository_url}:$IMAGE_TAG && break
   echo "Docker pull failed, retrying..."
   sleep 5
 done
@@ -200,7 +211,7 @@ docker run -d \
   --name ${var.service_name} \
   --restart unless-stopped \
   -p 8000:8000 \
-  ${var.repository_url}:${var.image_tag}
+  ${var.repository_url}:$IMAGE_TAG
 
 echo "Verifying container is running..."
 
@@ -227,7 +238,7 @@ fi
 echo "Waiting for app to be ready..."
 
 for i in {1..60}; do
-  STATUS=$(curl -s -o /dev/null -w '%%{http_code}' http://localhost:8000/health || echo 000)
+  STATUS=$(curl -s -o /dev/null -w '%%{http_code}' http://localhost:8000/health)
 
   if [ "$STATUS" = "200" ]; then
     echo "App is ready"

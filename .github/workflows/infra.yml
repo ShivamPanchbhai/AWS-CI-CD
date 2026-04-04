@@ -98,7 +98,7 @@ jobs:
       # Creates or updates AWS resources
       ########################################################
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var="image_tag=${IMAGE_TAG}"
+        run: terraform apply -auto-approve 
         working-directory: terraform
         env:
           IMAGE_TAG: ${{ github.event.workflow_run.head_sha || github.sha  }}
