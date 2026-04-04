@@ -45,9 +45,11 @@ resource "aws_autoscaling_group" "this" {
   health_check_type         = "ELB"
   health_check_grace_period = 180
 
-  ######################################################
+  ###########################################################
   # Rolling Instance Refresh (Immutable Deployments)
-  ######################################################
+  # because of this only changes in LT will trigger ASG
+  # to refresh instances otherwise instances will be outdated
+  #############################################################
 
   instance_refresh {
     strategy = "Rolling"
@@ -55,6 +57,8 @@ resource "aws_autoscaling_group" "this" {
     preferences {
       min_healthy_percentage = 50
     }
+
+   triggers = ["launch_template"]
   }
 
   ######################################################
