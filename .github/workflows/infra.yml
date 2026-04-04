@@ -12,6 +12,9 @@
 
 name: Infra Deploy
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   push:
     branches:
@@ -63,7 +66,7 @@ jobs:
       # Pull latest Terraform configuration
       ########################################################
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       ########################################################
       # 2️) Authenticate to AWS via OIDC
