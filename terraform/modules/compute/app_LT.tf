@@ -88,11 +88,13 @@ resource "aws_launch_template" "docker_lt" {
   }
 
 ############################################
-# User Data
+# User Data | any changes here will ask asg to 
+# trigger new app instances
 ############################################
   user_data = base64encode(<<EOF
 #!/bin/bash
 set -x
+
 
 ############################################
 # Stress test script
