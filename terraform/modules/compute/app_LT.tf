@@ -38,9 +38,17 @@ ingress {
 ############################################
 # Launch Template (Docker Runtime + Observability)
 ############################################
+
+
 resource "aws_launch_template" "docker_lt" {
 
+
+
   name = "${var.service_name}-runtime"
+
+  lifecycle {
+    create_before_destroy = true
+   }
 
   image_id      = var.ami_id
   instance_type = "t3.micro"
