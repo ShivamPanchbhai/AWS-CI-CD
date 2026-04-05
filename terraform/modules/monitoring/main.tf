@@ -132,10 +132,13 @@ scrape_configs:
       - source_labels: [__meta_ec2_tag_Monitoring]
         regex: node-exporter
         action: keep
-
+        
   - job_name: 'cloudwatch'
+    honor_labels: true
+    honor_timestamps: false
     static_configs:
-      - targets: ['localhost:9106']
+     - targets: ['localhost:9106']
+
 EOT
 ############################################
 # Alert rules
@@ -222,6 +225,7 @@ metrics:
     aws_dimensions: [InstanceId]
     aws_statistics: [Average]
 EOF_CW
+
 
 ############################################
 # START SERVICES (NO SYSTEMD)
