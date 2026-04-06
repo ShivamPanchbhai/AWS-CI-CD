@@ -9,6 +9,9 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green?logo=fastapi)
 ![Nginx](https://img.shields.io/badge/Nginx-Reverse_Proxy-darkgreen?logo=nginx)
 ![Architecture](https://img.shields.io/badge/Architecture-Platform_Engineering-blue)
+![Prometheus](https://img.shields.io/badge/Prometheus-Monitoring-orange?logo=prometheus)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboards-orange?logo=grafana)
+![Alertmanager](https://img.shields.io/badge/Alertmanager-Alerting-red)
 
 <br/>
 
@@ -33,6 +36,9 @@ It implements a **fully automated, immutable deployment pipeline** where infrast
 • Multi-AZ high availability with Auto Scaling
 • Fully containerized runtime with automated bootstrapping
 • Safe destroy workflow for cost control
+* Dynamic image tag resolution via SSM Parameter Store at instance boot
+* Full observability stack with end-to-end validated alert pipeline
+* EC2 service discovery for Prometheus scraping
 ```
 
 ---
@@ -49,20 +55,21 @@ How It Works (End-to-End Flow)
    → Builds Docker image
    → Tags with commit SHA
    → Pushes image to ECR
+   → Writes image tag to SSM Parameter Store
 
-3. Infra Pipeline triggers:
+4. Infra Pipeline triggers:
    → Terraform apply
-   → Updates Launch Template with new image tag
 
-4. Auto Scaling Group:
+5. Auto Scaling Group:
    → Performs rolling instance refresh
    → New EC2 instances launch
 
-5. EC2 bootstraps automatically:
+6. EC2 bootstraps automatically:
+   → Fetches latest image tag from SSM Parameter Store
    → Pulls image from ECR
    → Starts container
 
-6. Traffic flow:
+8. Traffic flow:
    Client → Route53 → ALB (HTTPS) → EC2 → Docker → FastAPI
 ---
 
@@ -87,11 +94,12 @@ Modular infrastructure provisioning:
 
 ```text
 Modules:
-• ECR → container registry
-• IAM → roles & instance profile
-• ACM → TLS certificates
-• ALB → HTTPS ingress
-• Compute → Launch Template + ASG
+- ECR        → container registry
+- IAM        → roles & instance profiles
+- ACM        → TLS certificate provisioning
+- ALB        → HTTPS ingress + target group
+- Compute    → Launch Template + ASG + target tracking scaling policy
+- Monitoring → Prometheus, Grafana, Alertmanager, CloudWatch Exporter
 ```
 
 Key features:
@@ -156,8 +164,24 @@ nginx → FastAPI (/health)
 ```
 
 ---
+### 5. Observability Layer
 
-### 5. Operational Layer
+Monitoring stack running on dedicated EC2:
+
+```text
+- Prometheus - metrics collection with EC2 service discovery
+- Grafana - dashboards
+- Alertmanager - email alerting
+- CloudWatch Exporter - ASG capacity metrics
+- Node Exporter - host-level metrics on all app instances
+
+Alert pipeline validated end-to-end:
+→ Stress test → ASG scales to max → ASGAtMaxCapacity fires
+→ pending → firing → email notification → resolved
+
+```
+
+### 6. Operational Layer
 
 Safe infrastructure lifecycle control:
 
@@ -190,6 +214,8 @@ Code Push → GitHub Actions → Build Image → Push to ECR
 • Separate deploy and runtime roles
 • Private EC2 instances (no public exposure)
 • HTTPS enforced via ALB
+* IMDSv2 enforced on all EC2 instances
+* SSM-based instance access (no SSH)
 ```
 
 ---
@@ -198,11 +224,33 @@ Code Push → GitHub Actions → Build Image → Push to ECR
 
 ```text
 .
+.
+├── .github/
+│   └── workflows/
+│       ├── app_deploy.yml       # Build, push to ECR, write tag to SSM
+│       ├── infra.yml            # Terraform apply, ASG rolling refresh
+│       └── destroy.yml         # Safe infrastructure teardown
 ├── bootstrap/
-├── terraform/
-│   └── modules/
+│   └── main.tf                  # OIDC provider, IAM deploy role, S3 backend
 ├── app/
-├── .github/workflows/
+│   ├── main.py                  # FastAPI application
+│   ├── Dockerfile
+│   ├── nginx.conf               # Reverse proxy config
+│   └── requirements.txt
+└── terraform/
+    ├── main.tf
+    ├── outputs.tf
+    ├── variables.tf
+    └── modules/
+        ├── acm/                 # TLS certificate provisioning
+        ├── alb/                 # HTTPS ingress + target group
+        ├── compute/             # Launch Template + ASG + scaling policy
+        │   ├── app_LT.tf
+        │   ├── asg.tf
+        │   └── variables.tf
+        ├── ecr/                 # Container registry
+        ├── iam/                 # Roles + instance profiles
+        └── monitoring/          # Prometheus, Grafana, Alertmanager, CloudWatch Exporter
 ```
 
 ---
@@ -224,6 +272,7 @@ Code Push → GitHub Actions → Build Image → Push to ECR
 
 ```text
 AWS (EC2, ASG, ALB, ECR, IAM, S3, Route53, ACM, SSM, CloudShell)
+Prometheus, Grafana, Alertmanager, CloudWatch Exporter, Node Exporter, SSM Parameter Store
 Terraform
 GitHub Actions (OIDC)
 Docker
