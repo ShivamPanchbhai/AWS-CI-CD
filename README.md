@@ -94,11 +94,12 @@ Modular infrastructure provisioning:
 
 ```text
 Modules:
-• ECR → container registry
-• IAM → roles & instance profile
-• ACM → TLS certificates
-• ALB → HTTPS ingress
-• Compute → Launch Template + ASG
+- ECR        → container registry
+- IAM        → roles & instance profiles
+- ACM        → TLS certificate provisioning
+- ALB        → HTTPS ingress + target group
+- Compute    → Launch Template + ASG + target tracking scaling policy
+- Monitoring → Prometheus, Grafana, Alertmanager, CloudWatch Exporter
 ```
 
 Key features:
@@ -167,6 +168,7 @@ nginx → FastAPI (/health)
 
 Monitoring stack running on dedicated EC2:
 
+```text
 - Prometheus - metrics collection with EC2 service discovery
 - Grafana - dashboards
 - Alertmanager - email alerting
@@ -176,6 +178,9 @@ Monitoring stack running on dedicated EC2:
 Alert pipeline validated end-to-end:
 → Stress test → ASG scales to max → ASGAtMaxCapacity fires
 → pending → firing → email notification → resolved
+
+```text
+```
 
 ### 6. Operational Layer
 
