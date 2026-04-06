@@ -210,8 +210,8 @@ Code Push → GitHub Actions → Build Image → Push to ECR
 • Separate deploy and runtime roles
 • Private EC2 instances (no public exposure)
 • HTTPS enforced via ALB
-- IMDSv2 enforced on all EC2 instances
-- SSM-based instance access (no SSH)
+* IMDSv2 enforced on all EC2 instances
+* SSM-based instance access (no SSH)
 ```
 
 ---
@@ -220,11 +220,33 @@ Code Push → GitHub Actions → Build Image → Push to ECR
 
 ```text
 .
+.
+├── .github/
+│   └── workflows/
+│       ├── app_deploy.yml       # Build, push to ECR, write tag to SSM
+│       ├── infra.yml            # Terraform apply, ASG rolling refresh
+│       └── destroy.yml         # Safe infrastructure teardown
 ├── bootstrap/
-├── terraform/
-│   └── modules/
+│   └── main.tf                  # OIDC provider, IAM deploy role, S3 backend
 ├── app/
-├── .github/workflows/
+│   ├── main.py                  # FastAPI application
+│   ├── Dockerfile
+│   ├── nginx.conf               # Reverse proxy config
+│   └── requirements.txt
+└── terraform/
+    ├── main.tf
+    ├── outputs.tf
+    ├── variables.tf
+    └── modules/
+        ├── acm/                 # TLS certificate provisioning
+        ├── alb/                 # HTTPS ingress + target group
+        ├── compute/             # Launch Template + ASG + scaling policy
+        │   ├── app_LT.tf
+        │   ├── asg.tf
+        │   └── variables.tf
+        ├── ecr/                 # Container registry
+        ├── iam/                 # Roles + instance profiles
+        └── monitoring/          # Prometheus, Grafana, Alertmanager, CloudWatch Exporter
 ```
 
 ---
