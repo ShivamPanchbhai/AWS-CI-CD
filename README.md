@@ -9,6 +9,9 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green?logo=fastapi)
 ![Nginx](https://img.shields.io/badge/Nginx-Reverse_Proxy-darkgreen?logo=nginx)
 ![Architecture](https://img.shields.io/badge/Architecture-Platform_Engineering-blue)
+![Prometheus](https://img.shields.io/badge/Prometheus-Monitoring-orange?logo=prometheus)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboards-orange?logo=grafana)
+![Alertmanager](https://img.shields.io/badge/Alertmanager-Alerting-red)
 
 <br/>
 
@@ -33,6 +36,9 @@ It implements a **fully automated, immutable deployment pipeline** where infrast
 • Multi-AZ high availability with Auto Scaling
 • Fully containerized runtime with automated bootstrapping
 • Safe destroy workflow for cost control
+- Dynamic image tag resolution via SSM Parameter Store at instance boot
+- Full observability stack with end-to-end validated alert pipeline
+- EC2 service discovery for Prometheus scraping
 ```
 
 ---
@@ -49,20 +55,21 @@ How It Works (End-to-End Flow)
    → Builds Docker image
    → Tags with commit SHA
    → Pushes image to ECR
+   → Writes image tag to SSM Parameter Store
 
-3. Infra Pipeline triggers:
+4. Infra Pipeline triggers:
    → Terraform apply
-   → Updates Launch Template with new image tag
 
-4. Auto Scaling Group:
+5. Auto Scaling Group:
    → Performs rolling instance refresh
    → New EC2 instances launch
 
-5. EC2 bootstraps automatically:
+6. EC2 bootstraps automatically:
+   → Fetches latest image tag from SSM Parameter Store
    → Pulls image from ECR
    → Starts container
 
-6. Traffic flow:
+8. Traffic flow:
    Client → Route53 → ALB (HTTPS) → EC2 → Docker → FastAPI
 ---
 
@@ -156,8 +163,21 @@ nginx → FastAPI (/health)
 ```
 
 ---
+### 5. Observability Layer
 
-### 5. Operational Layer
+Monitoring stack running on dedicated EC2:
+
+- Prometheus - metrics collection with EC2 service discovery
+- Grafana - dashboards
+- Alertmanager - email alerting
+- CloudWatch Exporter - ASG capacity metrics
+- Node Exporter - host-level metrics on all app instances
+
+Alert pipeline validated end-to-end:
+→ Stress test → ASG scales to max → ASGAtMaxCapacity fires
+→ pending → firing → email notification → resolved
+
+### 6. Operational Layer
 
 Safe infrastructure lifecycle control:
 
@@ -190,6 +210,8 @@ Code Push → GitHub Actions → Build Image → Push to ECR
 • Separate deploy and runtime roles
 • Private EC2 instances (no public exposure)
 • HTTPS enforced via ALB
+- IMDSv2 enforced on all EC2 instances
+- SSM-based instance access (no SSH)
 ```
 
 ---
@@ -224,6 +246,7 @@ Code Push → GitHub Actions → Build Image → Push to ECR
 
 ```text
 AWS (EC2, ASG, ALB, ECR, IAM, S3, Route53, ACM, SSM, CloudShell)
+Prometheus, Grafana, Alertmanager, CloudWatch Exporter, Node Exporter, SSM Parameter Store
 Terraform
 GitHub Actions (OIDC)
 Docker
