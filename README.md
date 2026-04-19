@@ -267,6 +267,22 @@ Code Push → GitHub Actions → Build Image → Push to ECR → Write tag to SS
 
 ## Observability Validation
 
+Stress test was executed on app EC2 instances to validate the full alert pipeline end-to-end.
+
+**1. ASG scaled to max capacity (10 instances)**
+![10 Instances](./images/10%20instances.png)
+
+**2. Prometheus metric confirmed desired capacity = 10**
+![Prometheus Dashboard](./images/prometheus.png)
+
+**3. Alertmanager received and routed the alert**
+![Alertmanager Dashboard](./images/alertmanager.png)
+
+**4. Email notification triggered**
+![Trigger Email](./images/trigger_email.png)
+
+**5. Alert resolved after stress test stopped**
+![Email Resolved](./images/email_resolved.png)
 ---
 
 ## Tech Stack
