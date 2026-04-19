@@ -287,6 +287,8 @@ Stress test was executed on app EC2 instances to validate the full alert pipelin
 
 **5. Alert resolved after stress test stopped**
 ![Email Resolved](./images/email_resolved.png)
+
+
 ---
 
 ## Tech Stack
