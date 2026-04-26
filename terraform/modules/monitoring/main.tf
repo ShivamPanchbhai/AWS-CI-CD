@@ -52,7 +52,7 @@ instance_type = "t3.micro"
 subnet_id     = var.subnet_id
 
 root_block_device {
-    volume_size = 32 
+    volume_size = 32
     volume_type = "gp3"
   }
 
@@ -124,7 +124,7 @@ scrape_configs:
       - source_labels: [__meta_ec2_tag_Monitoring]
         regex: node-exporter
         action: keep
-        
+
   - job_name: 'cloudwatch'
     honor_labels: true
     honor_timestamps: false
@@ -178,7 +178,7 @@ SMTP_PASSWORD=$(aws ssm get-parameter \
   --output text)
 
 ############################################
-# This ensures workflow fails if passowrd field is empty
+# This ensures workflow fails if password field is empty
 # otherwise alertmanager will not trigger
 ############################################
 
@@ -243,48 +243,94 @@ metrics:
 EOF_CW
 
 ############################################
-# START SERVICES (NO SYSTEMD)
+# Systemd service: Prometheus
 ############################################
+cat <<-EOT > /etc/systemd/system/prometheus.service
+[Unit]
+Description=Prometheus
+After=network.target
 
-set +m
-
-echo "=== STARTING PROMETHEUS ==="
-nohup /opt/prometheus/prometheus-2.51.2.linux-amd64/prometheus \
+[Service]
+ExecStart=/opt/prometheus/prometheus-2.51.2.linux-amd64/prometheus \
   --config.file=/opt/prometheus/prometheus.yml \
-  --storage.tsdb.path=/opt/prometheus/data \
-  > /var/log/prometheus.log 2>&1 &
-disown
+  --storage.tsdb.path=/opt/prometheus/data
+Restart=always
+RestartSec=5
 
-echo "=== STARTING ALERTMANAGER ==="
-nohup /opt/alertmanager/alertmanager \
+[Install]
+WantedBy=multi-user.target
+EOT
+
+############################################
+# Systemd service: Alertmanager
+############################################
+cat <<-EOT > /etc/systemd/system/alertmanager.service
+[Unit]
+Description=Alertmanager
+After=network.target
+
+[Service]
+ExecStart=/opt/alertmanager/alertmanager \
   --config.file=/opt/alertmanager/alertmanager.yml \
-  --storage.path=/opt/alertmanager/data \
-  > /var/log/alertmanager.log 2>&1 &
-disown
+  --storage.path=/opt/alertmanager/data
+Restart=always
+RestartSec=5
 
-echo "=== STARTING GRAFANA ==="
-nohup /usr/sbin/grafana-server \
-  --homepath /usr/share/grafana \
-  > /var/log/grafana.log 2>&1 &
-disown
-
-echo "=== STARTING CLOUDWATCH EXPORTER ==="
-nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar \
-  9106 /opt/cloudwatch_exporter/config.yml \
-  > /var/log/cloudwatch_exporter.log 2>&1 &
-disown
+[Install]
+WantedBy=multi-user.target
+EOT
 
 ############################################
-# AUTO START ON REBOOT (CRON)
+# Systemd service: Grafana
 ############################################
+cat <<-EOT > /etc/systemd/system/grafana-server.service
+[Unit]
+Description=Grafana
+After=network.target
 
-(crontab -l 2>/dev/null; echo "@reboot nohup /opt/prometheus/prometheus-2.51.2.linux-amd64/prometheus --config.file=/opt/prometheus/prometheus.yml --storage.tsdb.path=/opt/prometheus/data > /var/log/prometheus.log 2>&1 &") | crontab -
+[Service]
+ExecStart=/usr/sbin/grafana-server --homepath /usr/share/grafana
+Restart=always
+RestartSec=5
 
-(crontab -l 2>/dev/null; echo "@reboot nohup /opt/alertmanager/alertmanager --config.file=/opt/alertmanager/alertmanager.yml --storage.path=/opt/alertmanager/data > /var/log/alertmanager.log 2>&1 &") | crontab -
+[Install]
+WantedBy=multi-user.target
+EOT
 
-(crontab -l 2>/dev/null; echo "@reboot nohup /usr/sbin/grafana-server --homepath /usr/share/grafana > /var/log/grafana.log 2>&1 &") | crontab -
+############################################
+# Systemd service: CloudWatch Exporter
+############################################
+cat <<-EOT > /etc/systemd/system/cloudwatch-exporter.service
+[Unit]
+Description=CloudWatch Exporter
+After=network.target
 
-(crontab -l 2>/dev/null; echo "@reboot nohup /usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar 9106 /opt/cloudwatch_exporter/config.yml > /var/log/cloudwatch_exporter.log 2>&1 &") | crontab -
+[Service]
+ExecStart=/usr/bin/java -jar /opt/cloudwatch_exporter/cloudwatch_exporter.jar \
+  9106 /opt/cloudwatch_exporter/config.yml
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOT
+
+############################################
+# Enable and start all services via systemd
+############################################
+systemctl daemon-reload
+
+systemctl enable prometheus
+systemctl start prometheus
+
+systemctl enable alertmanager
+systemctl start alertmanager
+
+systemctl enable grafana-server
+systemctl start grafana-server
+
+systemctl enable cloudwatch-exporter
+systemctl start cloudwatch-exporter
 
 echo "=== USER DATA COMPLETE ==="
 
